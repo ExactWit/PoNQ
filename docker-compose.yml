@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  ponq:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ponq:latest
+    container_name: ponq_container
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - CUDA_VISIBLE_DEVICES=0
+      - PYTHONUNBUFFERED=1
+    volumes:
+      # 项目代码（实时同步修改）
+      - .:/workspace/PoNQ
+      # SSD数据目录（处理后的数据）
+      - /home/divisor/workspace/data:/workspace/data
+      # HDD大数据集（原始数据集）
+      - /data/hdd/DATASETS:/workspace/DATASETS
+    working_dir: /workspace/PoNQ
+    ports:
+      - "8888:8888"
+      - "6006:6006"
+    stdin_open: true
+    tty: true
+    command: /bin/bash
